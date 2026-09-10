@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Build output and test coverage
+dist/
+coverage/
+*.tsbuildinfo
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+
+# AWS SAM local artifacts
+.aws-sam/
+samconfig.local.toml
+
+# Logs and editor files
+*.log
+.DS_Store
+.idea/
+.vscode/
