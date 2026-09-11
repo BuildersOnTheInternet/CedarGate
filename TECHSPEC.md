@@ -4,6 +4,21 @@
 
 This document specifies the local TypeScript implementation of the authorization engine described in [PRD.md](PRD.md). It covers the service boundary, runtime, source layout, policy evaluation, validation, testing, and local execution.
 
+### Reusable Engine and Application-Specific Rules
+
+CedarGate is a reusable authorization **engine**, not a universal set of permissions for every kind of application. It provides one consistent decision API, Cedar policy validation and evaluation, deny handling, tenant-isolation patterns, test support, and local deployment. An application's users do not use CedarGate directly; its backend calls CedarGate before it performs a protected action.
+
+Each application still needs a vocabulary for its own business domain. That vocabulary consists of a Cedar schema (entities, attributes, and actions), policies (the permission rules), and entity data (the values for a specific user and resource). For example, the included `User`/`Document` schema is a document-domain starter example; an invoicing application would use entities such as `Employee` and `Invoice` and an action such as `approve`.
+
+To avoid requiring every developer to create these files from nothing, CedarGate provides a generic RBAC starter schema and a document-domain starter schema. Future starter packs will add common domains such as projects and invoices. A starter pack supplies an initial schema and policy set; developers only customize it where their business rules differ.
+
+```text
+Starter pack/configuration → schema + baseline policies
+Application entity data    → user and resource attributes
+Application → POST /authorize → CedarGate → ALLOW or DENY
+Application performs the protected action only when allowed
+```
+
 ## 2. Technology Stack
 
 | Layer | Technology | Responsibility |
@@ -44,6 +59,8 @@ TypeScript Lambda handler
 ```
 
 The handler is intentionally thin. It parses the API Gateway event, validates its JSON body, calls the authorization service, and returns a JSON response. Policy loading and Cedar evaluation remain outside the HTTP layer so they can be tested directly.
+
+The initial implementation uses `document.cedarschema` as its document demonstrator. The startup configuration must select a starter pack before Cedar initializes (for example, `document` or `generic-rbac`) and load that pack's schema and baseline policies. The HTTP handler must not select a pack or contain business-specific authorization shortcuts.
 
 ## 4. API Contract
 
@@ -113,7 +130,8 @@ authorization-engine/
 │   ├── explicit-deny.cedar
 │   └── time-based-access.cedar
 ├── schema/
-│   └── schema.cedarschema
+│   ├── document.cedarschema     # Document-domain starter schema
+│   └── generic-rbac.cedarschema # Tenant-scoped RBAC/CRUD starter schema
 ├── scenarios/
 │   └── authorization_cases.json
 ├── src/
@@ -176,5 +194,7 @@ LocalStack is optional and is introduced only to validate the API Gateway-to-Lam
 | 6 | Package and run with SAM | Required |
 | 7 | Add LocalStack API Gateway emulation | Optional |
 | 8 | Add time-boxed access policies | Optional |
+| 9 | Add startup configuration to select `document` or `generic-rbac` schema and policy pack | Required |
+| 10 | Add project and invoice starter packs | Optional |
 
-When time is constrained, defer LocalStack first and time-based access second. Do not defer the schema, policies, handler, scenario suite, or SAM execution.
+When time is constrained, defer LocalStack first and time-based access second. The document schema and policies remain required for the initial demonstrator. The generic RBAC schema is included as the first reusable starter pack; startup pack selection is required before presenting CedarGate as a configurable product.
