@@ -1,0 +1,31 @@
+namespace CedarGate {
+  entity Tenant;
+
+  entity User = {
+    tenant: Tenant,
+    role: String
+  };
+
+  entity Document = {
+    tenant: Tenant,
+    isRestricted?: Bool
+  };
+
+  action read appliesTo {
+    principal: User,
+    resource: Document,
+    context: { tenant: String }
+  };
+
+  action edit appliesTo {
+    principal: User,
+    resource: Document,
+    context: { tenant: String }
+  };
+
+  action delete appliesTo {
+    principal: User,
+    resource: Document,
+    context: { tenant: String }
+  };
+}
