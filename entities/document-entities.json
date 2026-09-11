@@ -1,0 +1,68 @@
+[
+  {
+    "uid": { "type": "CedarGate::Tenant", "id": "tenant-a" },
+    "attrs": {},
+    "parents": []
+  },
+  {
+    "uid": { "type": "CedarGate::Tenant", "id": "tenant-b" },
+    "attrs": {},
+    "parents": []
+  },
+  {
+    "uid": { "type": "CedarGate::User", "id": "alice" },
+    "attrs": {
+      "tenant": { "__entity": { "type": "CedarGate::Tenant", "id": "tenant-a" } },
+      "role": "owner"
+    },
+    "parents": []
+  },
+  {
+    "uid": { "type": "CedarGate::User", "id": "bob" },
+    "attrs": {
+      "tenant": { "__entity": { "type": "CedarGate::Tenant", "id": "tenant-a" } },
+      "role": "editor"
+    },
+    "parents": []
+  },
+  {
+    "uid": { "type": "CedarGate::User", "id": "carol" },
+    "attrs": {
+      "tenant": { "__entity": { "type": "CedarGate::Tenant", "id": "tenant-a" } },
+      "role": "viewer"
+    },
+    "parents": []
+  },
+  {
+    "uid": { "type": "CedarGate::User", "id": "eve" },
+    "attrs": {
+      "tenant": { "__entity": { "type": "CedarGate::Tenant", "id": "tenant-b" } },
+      "role": "editor"
+    },
+    "parents": []
+  },
+  {
+    "uid": { "type": "CedarGate::Document", "id": "doc-1" },
+    "attrs": {
+      "tenant": { "__entity": { "type": "CedarGate::Tenant", "id": "tenant-a" } },
+      "isRestricted": false
+    },
+    "parents": []
+  },
+  {
+    "uid": { "type": "CedarGate::Document", "id": "doc-2" },
+    "attrs": {
+      "tenant": { "__entity": { "type": "CedarGate::Tenant", "id": "tenant-a" } },
+      "isRestricted": true
+    },
+    "parents": []
+  },
+  {
+    "uid": { "type": "CedarGate::Document", "id": "doc-3" },
+    "attrs": {
+      "tenant": { "__entity": { "type": "CedarGate::Tenant", "id": "tenant-b" } },
+      "isRestricted": false
+    },
+    "parents": []
+  }
+]
