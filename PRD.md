@@ -55,6 +55,37 @@ or
 DENY
 ```
 
+### Cedar and CedarGate
+
+Cedar is the policy language and evaluation engine. It answers one focused
+question: given a schema, policies, entity data, and an authorization request,
+should the request be allowed?
+
+CedarGate is the developer tool and local service built around Cedar. It should
+remove the surrounding setup work that every application would otherwise need
+to repeat:
+
+| Cedar provides | CedarGate provides |
+| --- | --- |
+| Policy language and evaluator | Project setup, conventions, and starter packs |
+| Schema and policy primitives | A local, consistent `POST /authorize` decision API |
+| Raw policy and entity inputs | Input validation, entity fixtures, and tenant-isolation patterns |
+| Evaluation APIs | Local policy testing and serverless-style execution |
+
+The intended CLI workflow is:
+
+```bash
+cedargate init document-app
+cedargate dev
+cedargate test
+cedargate authorize --principal User::alice --action Action::edit --resource Document::doc-1
+```
+
+The CLI commands are a product goal, not part of the first document-only
+implementation. The initial version proves the document authorization flow;
+the CLI will package that flow into a reusable developer experience. CedarGate
+must offer these workflow benefits rather than merely wrap a Cedar evaluator.
+
 ---
 
 # 2. What We're Building
